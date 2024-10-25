@@ -1,0 +1,22 @@
+<div class="min-h-16 bg-red-200 flex place-content-center place-items-center">
+  <span class="text-xl font-bold">TODO APP CLIENT</span>
+</div>
+
+<section class="bg-slate-50 grid h-[calc(100dvh-64px)] overflow-auto place-items-center">
+  @if(noteList(); as noteList){
+  <app-note-list
+    class="p-4 flex flex-col gap-8 w-[600px]"
+    [noteList]="noteList"
+    (onUpdate)="onUpdateNote($event)"
+    (onDelete)="onDeleteNote($event)"></app-note-list
+  >}
+</section>
+
+<section class="absolute bottom-8 right-8">
+  <button
+    color="primary"
+    mat-fab
+    (click)="onCreateNote()">
+    <mat-icon fontIcon="add"></mat-icon>
+  </button>
+</section>

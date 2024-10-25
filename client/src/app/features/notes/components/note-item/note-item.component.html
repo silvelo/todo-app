@@ -1,0 +1,34 @@
+@if(note(); as note){
+<div
+class="bg-red-100 border-4 border-solid border-black rounded-xl p-4 flex flex-col shadow-xl"
+>
+<div class="flex flex-col">
+  <div class="flex justify-between">
+    <h3>{{ note.name }}</h3>
+    <span>{{ note.tags }}</span>
+  </div>
+  
+</div>
+<div class="flex">
+    <p class="shrink-0 grow">{{ note.description }}</p>
+    <div>
+    <button color="primary" mat-icon-button (click)="onUpdate.emit(note)">
+      <mat-icon fontIcon="edit"></mat-icon>
+    </button>
+    <button color="warn" mat-icon-button (click)="onDelete.emit(note)">
+      <mat-icon fontIcon="delete"></mat-icon>
+    </button>
+</div>
+  </div>
+
+<div class="flex justify-between ">
+    <span class="flex gap-4  place-items-center">
+      <mat-icon fontIcon="calendar_today"></mat-icon>
+      <span>{{ note.createdAt | date }}</span>
+    </span>
+    <span class="flex gap-4  place-items-center" >
+      <mat-icon fontIcon="calendar_today"></mat-icon>
+      <span>{{ note.updatedAt | date }}</span>
+    </span>
+  </div>
+</div>}

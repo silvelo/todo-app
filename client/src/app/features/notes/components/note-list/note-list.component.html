@@ -1,0 +1,6 @@
+  @for(note of noteList(); track $index) {
+  <app-note-item [note]="note"
+  (onDelete)="onDelete.emit($event)"
+  (onUpdate)="onUpdate.emit($event)"
+  ></app-note-item>
+  }

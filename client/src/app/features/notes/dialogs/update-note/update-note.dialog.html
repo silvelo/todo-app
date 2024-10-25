@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Update {{ noteDTO.name }}</h2>
+<mat-dialog-content>
+  <section
+    [formGroup]="notePayloadForm"
+    class="flex flex-col gap-4 pt-4 mt-4">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        formControlName="name" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Tags</mat-label>
+      <mat-select formControlName="tags">
+        @for(item of (noteTagEnum | keyvalue); track $index) {
+        <mat-option [value]="item.key">{{ item.key }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </section>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    color="warn"
+    mat-dialog-close>
+    Cancel
+  </button>
+  <button
+    mat-raised-button
+    [matDialogClose]="notePayloadForm.getRawValue()"
+    color="primary">
+    Update Note
+  </button>
+</mat-dialog-actions>
