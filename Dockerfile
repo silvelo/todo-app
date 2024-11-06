@@ -21,6 +21,8 @@ RUN npm install --legacy-peer-deps
 # Copy backend code into the container
 COPY ./backend .
 
+CMD [ "npm", "run", "start:dev" ]
+
 ###################################################
 # Stage: backend-dev
 ###################################################
