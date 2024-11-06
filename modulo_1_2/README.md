@@ -45,13 +45,29 @@ Sigue los siguientes pasos para completar el ejercicio:
 
     </details>
 
+   Una vez guardados los cambios si accedemos al servidor desde nuestro navegador web veremos los cambios reflejados.
+
+    <details>
+    <summary>Ver comandos para acceder y modificar el archivo</summary>
+
+   ```bash
+       docker ps # Para ver el puerto asociado
+   ```
+
+   Acceder `localhost:<puerto>` en nuestro navegador.
+
+    </details>
+
+> [!TIP]  
+> Para guardar con `nano` CTRL+O y enter. Para salir CTRL+X
+
 > [!NOTE]
 > Si `nano` no está instalado, puedes usar el siguiente comando para instalarlo:
 
-   ```bash
-   apt update
-   apt install nano
-   ```
+```bash
+apt update
+apt install nano
+```
 
 4. **Copiar el contenido de la carpeta HTML al sistema host**
    Una vez que hayas realizado los cambios, copia el contenido del directorio HTML del contenedor a tu máquina host con el siguiente comando:
@@ -83,23 +99,23 @@ Sigue los siguientes pasos para completar el ejercicio:
 > [!TIP]  
 >  También puedes usar una ruta relativa o absoluta en lugar de pwd para especificar la ubicación de la carpeta que deseas montar en el contenedor. Por ejemplo:
 
-   ```bash
-   docker run --name nginx-practica -v /ruta/a/mi/carpeta:/usr/share/nginx/html -P nginx
-   ```
+```bash
+docker run --name nginx-practica -v /ruta/a/mi/carpeta:/usr/share/nginx/html -P nginx
+```
 
-   ó
+ó
 
-   ```bash
-   cd /ruta/a/mi/carpeta
-   docker run --name nginx-practica -v .:/usr/share/nginx/html -P nginx
-   ```
+```bash
+cd /ruta/a/mi/carpeta
+docker run --name nginx-practica -v .:/usr/share/nginx/html -P nginx
+```
 
-   Si editas los archivos de la carpeta en tu máquina local (donde se montó el volumen), los cambios se reflejarán automáticamente dentro del contenedor. Esto es porque el volumen que se montó entre el contenedor y tu máquina local está sincronizado. Puedes editar los archivos como lo harías normalmente en tu máquina, y al recargar el navegador, verás los cambios reflejados dentro del contenedor NGINX.
+Si editas los archivos de la carpeta en tu máquina local (donde se montó el volumen), los cambios se reflejarán automáticamente dentro del contenedor. Esto es porque el volumen que se montó entre el contenedor y tu máquina local está sincronizado. Puedes editar los archivos como lo harías normalmente en tu máquina, y al recargar el navegador, verás los cambios reflejados dentro del contenedor NGINX.
 
-   ```bash
-   cd /ruta/a/mi/carpeta
-   notepad index.html
-   ```
+```bash
+cd /ruta/a/mi/carpeta
+notepad index.html
+```
 
 ## Recursos adicionales
 
