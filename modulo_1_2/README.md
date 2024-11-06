@@ -45,8 +45,8 @@ Sigue los siguientes pasos para completar el ejercicio:
 
     </details>
 
-   > [!NOTE]
-   > Si `nano` no está instalado, puedes usar el siguiente comando para instalarlo:
+> [!NOTE]
+> Si `nano` no está instalado, puedes usar el siguiente comando para instalarlo:
 
    ```bash
    apt update
@@ -77,11 +77,11 @@ Sigue los siguientes pasos para completar el ejercicio:
 
     </details>
 
-   > [!IMPORTANT]  
-   > Si estás utilizando PowerShell en Windows, el comando `pwd` no funcionará como en sistemas basados en Unix. En PowerShell, debes usar `${PWD}` para obtener la ruta del directorio actual.
+> [!IMPORTANT]  
+> Si estás utilizando PowerShell en Windows, el comando `pwd` no funcionará como en sistemas basados en Unix. En PowerShell, debes usar `${PWD}` para obtener la ruta del directorio actual.
 
-   > [!TIP]  
-   >  También puedes usar una ruta relativa o absoluta en lugar de pwd para especificar la ubicación de la carpeta que deseas montar en el contenedor. Por ejemplo:
+> [!TIP]  
+>  También puedes usar una ruta relativa o absoluta en lugar de pwd para especificar la ubicación de la carpeta que deseas montar en el contenedor. Por ejemplo:
 
    ```bash
    docker run --name nginx-practica -v /ruta/a/mi/carpeta:/usr/share/nginx/html -P nginx
