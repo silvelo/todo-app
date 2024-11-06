@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -15,7 +16,11 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
+  const port = process.env.PORT ?? 3000; // Obtener el puerto
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(port);
+
+  const logger = new Logger('Bootstrap'); // Nombre del contexto
+  logger.log(`Application is running on: http://localhost:${port}/api`);
 }
 bootstrap();

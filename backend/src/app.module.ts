@@ -5,7 +5,7 @@ import { NoteModule } from './notes/notes.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.DATABASE_URI),
+    ...(process.env.USE_MEMORY_DB === 'true' ? [] : [MongooseModule.forRoot(process.env.DATABASE_URI)]), // Condición para importar MongooseModule
     NoteModule
   ],
 })

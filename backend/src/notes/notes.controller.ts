@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpStatus,
+  Inject,
   Param,
   Post,
   Put,
@@ -12,12 +13,15 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NoteDTO } from './dto/note.dto';
 import { NotePayload } from './interfaces/note.payload';
-import { NoteService } from './notes.service';
+import { NoteService } from './note.service';
+
+
 
 @Controller('notes')
 @ApiTags('notes')
 export class NoteController {
-  constructor(private noteService: NoteService) {}
+  constructor(@Inject('NoteService') private readonly noteService: NoteService) {}
+
 
   @Post()
   @ApiOperation({ summary: 'Create a note' })
