@@ -1,0 +1,21 @@
+# Node modules y dependencias
+
+backend/node_modules
+
+# Archivos de build y cobertura
+
+backend/dist
+backend/coverage
+
+# Archivos de configuración y logs innecesarios
+
+backend/\*.log
+
+# Archivos de entorno
+
+backend/.env
+
+# Otros archivos no necesarios para la imagen
+
+package-lock.json
+package.json
