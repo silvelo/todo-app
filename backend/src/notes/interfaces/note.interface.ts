@@ -10,4 +10,4 @@ export interface NoteBase {
 
 import { Document } from "mongoose";
 
-export type NoteDocument = NoteBase & Document;
+export type NoteDocument = Document & NoteBase;

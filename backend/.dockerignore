@@ -1,0 +1,17 @@
+# Node modules y dependencias
+
+node_modules
+
+# Archivos de build y cobertura
+
+dist
+coverage
+
+# Archivos de configuración y logs innecesarios
+
+*.log
+
+# Archivos de entorno
+
+.env
+

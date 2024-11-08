@@ -8,28 +8,29 @@ import { NotePayload } from '../interface/note.payload';
 })
 export class NotesService {
 
-  #http = inject(HttpClient)
+  readonly #http = inject(HttpClient)
+  readonly #baseUrl = '/notes'
 
 
   createNote(notePayload:NotePayload) {
-    return this.#http.post<NoteDTO>('http://localhost:3000/api/notes', notePayload);
+    return this.#http.post<NoteDTO>(this.#baseUrl, notePayload);
   }
 
   getNotes() {
-    return this.#http.get<NoteDTO[]>('http://localhost:3000/api/notes');
+    return this.#http.get<NoteDTO[]>(this.#baseUrl);
   }
 
   getNote(noteId: string) {
-    return this.#http.get<NoteDTO>(`http://localhost:3000/api/notes/${noteId}`);
+    return this.#http.get<NoteDTO>(`${this.#baseUrl}/${noteId}`);
   }
 
 
   updateNotes(noteId: string, notePayload: NotePayload) {
-    return this.#http.put<NoteDTO>(`http://localhost:3000/api/notes/${noteId}`, notePayload);
+    return this.#http.put<NoteDTO>(`${this.#baseUrl}/${noteId}`, notePayload);
   }
   
   deleteNotes(noteId: string) {
-    return this.#http.delete<NoteDTO>(`http://localhost:3000/api/notes/${noteId}`);
+    return this.#http.delete<NoteDTO>(`${this.#baseUrl}/${noteId}`);
   }
 
   

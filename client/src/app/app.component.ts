@@ -41,7 +41,7 @@ export class AppComponent {
         if (notePayload) {
           this.#notesService.createNote(notePayload).subscribe(noteDTO => {
             this.#snackBar.open(`Note ${noteDTO.name} Create`);
-            this.onUpdate.set(`${noteDTO.createdAt} ${noteDTO._id}`);
+            this.onUpdate.set(`${noteDTO.createdAt} ${noteDTO.id}`);
           });
         }
       });
@@ -53,9 +53,10 @@ export class AppComponent {
       .afterClosed()
       .subscribe(updateNoteDTO => {
         if (updateNoteDTO) {
-          this.#notesService.updateNotes(noteDTO._id, updateNoteDTO).subscribe(() => {
+          console.log(noteDTO)
+          this.#notesService.updateNotes(noteDTO.id, updateNoteDTO).subscribe(() => {
             this.#snackBar.open(`Note ${noteDTO.name} Update`);
-            this.onUpdate.set(`${noteDTO.createdAt} ${noteDTO._id}`);
+            this.onUpdate.set(`${noteDTO.createdAt} ${noteDTO.id}`);
           });
         }
       });
@@ -66,9 +67,10 @@ export class AppComponent {
       .afterClosed()
       .subscribe(confirm => {
         if (confirm) {
-          this.#notesService.deleteNotes(noteDTO._id).subscribe(() => {
+          console.log(noteDTO)
+          this.#notesService.deleteNotes(noteDTO.id).subscribe(() => {
             this.#snackBar.open(`Note ${noteDTO.name} Delete`);
-            this.onDelete.set(`${noteDTO.createdAt} ${noteDTO._id}`);
+            this.onDelete.set(`${noteDTO.createdAt} ${noteDTO.id}`);
           });
         }
       });
