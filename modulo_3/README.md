@@ -41,3 +41,13 @@ Vamos a añadir una base de datos MongoDB y configurar la red para que los servi
 2. El backend debe poder conectarse tanto al cliente como a MongoDB.
 3. El cliente solo puede conectarse al backend, pero no directamente a MongoDB.
 4. MongoDB solo debe ser accesible desde el backend.
+
+# Ejercicio: Persistencia de Datos con Volúmenes
+
+Partiendo del ejercicio de redes donde se conectan las aplicaciones `todo-backend` y `todo-client`, realiza lo siguiente:
+
+1. Crea un volumen nombrado para almacenar la base de datos de MongoDB.
+2. Inserta algunas entradas de ejemplo en la base de datos de MongoDB a través del backend.
+3. Detén y elimina el contenedor de MongoDB, pero mantén el volumen persistente.
+4. Crea un nuevo contenedor de MongoDB usando el mismo volumen nombrado.
+5. Verifica que los datos insertados anteriormente siguen estando presentes en la base de datos.
