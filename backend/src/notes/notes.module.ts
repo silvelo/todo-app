@@ -16,7 +16,7 @@ const noteServiceProvider = {
 
 @Module({
   imports:
-    process.env.NODE_ENV === 'production'
+    process.env.USE_MEMORY_DB === 'false'
       ? [MongooseModule.forFeature([{ name: 'Note', schema: NoteSchema }])]
       : [],
   controllers: [NoteController],

@@ -13,34 +13,207 @@ El objetivo de este ejercicio es desplegar ambos contenedores y configurarlos pa
 
 ### Pasos:
 
-1. Crea una red personalizada llamada `todo-network` que permita la comunicación entre los contenedores.
-2. Inicia un contenedor basado en la imagen `silvelo/todo-backend` y conéctalo a la red `todo-network`.
-3. Asegúrate de exponer el puerto `3000` para el backend.
+1.  Crea una red personalizada llamada `todo-network` que permita la comunicación entre los contenedores.
+    <details>
+    <summary>Ver comandos</summary>
+
+    ```bash
+        docker network create todo-network
+    ```
+
+    </details>
+
+2.  Inicia un contenedor basado en la imagen `silvelo/todo-backend` y añádelo a la red `todo-network`(Asegúrate de exponer el puerto `3000` para el backend)
+    <details>
+    <summary>Ver comandos</summary>
+
+    ```bash
+        # Cualquiera de los siguiente comandos
+        docker run -d -p 3000:3000 --network todo-network silvelo/todo-backend
+        docker run -d -p 3000:3000 --network todo-network --hostname backend_host --name todo-backend  silvelo/todo-backend
+        # Exponer el puerto , añadirla al todo-network, ponerle nombre al host y nombre al contenedor
+    ```
+
+    </details>
+
+    <details>
+    <summary>Ver comandos</summary>
+
+    ```bash
+        # Alternativa
+        docker run -d -p 3000:3000 --hostname backend_host --name todo-backend  silvelo/todo-backend
+        # Exponer el puerto , añadirla al todo-network, ponerle nombre al host y nombre al contenedor
+        # Gestionamos la redes para añadir la creada y eliminar la defecto
+        docker network connect todo-network todo-backend
+        docker network disconnect bridge todo-backend
+    ```
+
+    </details>
+
+    <details>
+
+    <summary>Ver comandos</summary>
+
+    ```bash
+        # Ver la ip asignada y los nombres
+        docker inspect todo-backend
+    ```
+
+    ```
+    ...
+     "Networks": {
+        "todo-network": {
+            ....
+            "Gateway": "172.18.0.1",
+            "IPAddress": "172.18.0.2",
+            "DNSNames": [
+                "todo-backend",
+                "652cd92cd632",
+                "backend_host"
+            ]
+        }
+    }
+    ```
+
+    </details>
+
+3.  Inicia un contenedor basado en la imagen `silvelo/todo-client` y conéctalo también a la red `todo-network`.
+
+    <details>
+    <summary>Ver comandos</summary>
+
+    ```bash
+        # Descargar y editar el fichero de nginx: backend_host, todo-backend, 172.18.0.2 ó 652cd92cd632
+        location /api/ {
+            proxy_pass http://backend_host:3000;  # URL de tu servidor backend
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+    ```
+
+    </details>
+
+    <details>
+    <summary>Ver comandos</summary>
+
+    ```bash
+        # Alternativa
+        docker run -d -p 8080:80 -v .\nginx\nginx.conf:/etc/nginx/nginx.conf --hostname client_host  --name todo-client --network todo-network silvelo/todo-client
+        # Exponer el puerto , añadirla al todo-network, ponerle nombre al host y nombre al contenedor.
+        # Comando -v monta el el fichero .\nginx\nginx.conf en el contenedor, en la ruta /etc/nginx/nginx.conf. Es necesario asegurarse que el fichero  .\nginx\nginx.conf existe y la ruta es correcta (Usar rutas relativas o absolutas)
+    ```
+
+    </details>
+
+4.  Asegúrate de que la aplicación frontend pueda acceder al backend a través del nombre del servicio (`todo-backend`) en lugar de una dirección IP.
+
+- Acceder [URL SERVER - https//:localhost:3000/api](https//:localhost:3000/api)
+
+![Backend Swagger](/img/backend.png)
+
+- Acceder [URL CLIENT - https//:localhost:8080](https//:localhost:8080)
+
+![Frontend](/img/frontend.png)
+
+- Crear una nueva nota
+
+![Create Note](/img/create_note.png)
+
+- Ver las notas creadas
+
+![Note List](/img/note_list.png)
 
 ## Parte 2
 
-### Pasos:
-
-4. Inicia un contenedor basado en la imagen `silvelo/todo-client` y conéctalo también a la red `todo-network`.
-5. Asegúrate de que la aplicación frontend pueda acceder al backend a través del nombre del servicio (`todo-backend`) en lugar de una dirección IP.
-
-### Resultado esperado:
-
-- El backend (`silvelo/todo-backend`) debería estar accesible en la red bajo el nombre `todo-backend`.
-- El frontend (`silvelo/todo-client`) debería poder comunicarse con el backend usando la URL `http://todo-backend:3000`.
-
-## Parte 3
-
 ### Extensión del ejercicio:
 
-Vamos a añadir una base de datos MongoDB y configurar la red para que los servicios tengan permisos específicos.
+Vamos a añadir una base de datos MongoDB y configurar la red para que solo sea accesible por el backend.
+
+![Infraestructura final](/img/esquema_modulo_3.png)
 
 ### Pasos:
 
-1. Añade un contenedor basado en la imagen oficial de `mongo`.
-2. El backend debe poder conectarse tanto al cliente como a MongoDB.
-3. El cliente solo puede conectarse al backend, pero no directamente a MongoDB.
-4. MongoDB solo debe ser accesible desde el backend.
+1.  Crear un nueva red backend.
+
+<details>
+<summary>Ver comandos</summary>
+
+```bash
+docker network create todo-backend
+```
+
+</details>
+
+2.  Añade un contenedor basado en la imagen oficial de `mongo`.
+
+<details>
+<summary>Ver comandos</summary>
+
+```bash
+    docker run -it -d -p 27017:27017 --network todo-backend --name mongo --hostname mongo_host mongo
+    #Exponer el puerto
+
+```
+
+</details>
+
+3.  El backend debe poder conectarse tanto al cliente como a MongoDB.
+
+<details>
+<summary>Ver comandos</summary>
+
+```bash
+    # Paramos y borramos el actual para configurar el nuevo
+    docker rm -f todo-backend
+    # Configuramos el nuevo con la variable de entorno
+    docker run -d -p 3000:3000 --hostname backend_host -e USE_MEMORY_DB=false --name todo-backend  --network todo-backend silvelo/todo-backend
+    # El contenedor después de un tiempo fallará porque no encuentra mongo en la default URL
+    docker rm -f todo-backend
+    docker run -d -p 3000:3000 --hostname backend_host -e USE_MEMORY_DB=false -e DATABASE_URI=mongodb://mongo_host:27017/notes --name todo-backend  --network todo-backend silvelo/todo-backend
+    # Añadimos la otra red (todo-network) al container (todo-backend)
+    docker network connect todo-network todo-backend
+    # Comprobamos que están la redes asignadas
+    docker inspect todo-backend
+```
+
+```
+"Networks": {
+                "todo-backend": {
+                    ....
+                    "IPAddress": "172.19.0.3",
+                    "DNSNames": [
+                        "todo-backend",
+                        "eed95a645151",
+                        "backend_host"
+                    ]
+                },
+                "todo-network": {
+                    ...
+                    "IPAddress": "172.18.0.2",
+                    "DNSNames": [
+                        "todo-backend",
+                        "eed95a645151",
+                        "backend_host"
+                    ]
+                }
+            }
+```
+
+</details>
+
+### Comprobar
+
+1. Descargar mongo [Compass](https://www.mongodb.com/try/download/compass)
+
+2. Conectarse a mongo (configuración por defecto)
+   ![Infraestructura final](/img/mongo_compass.png)
+
+3. Añadir notas desde el [cliente](http://localhost:8080)
+4. Comprobamos la base de datos que existe ``notes` y su contenido
+   ![Infraestructura final](/img/database_add.png)
 
 # Ejercicio: Persistencia de Datos con Volúmenes
 
