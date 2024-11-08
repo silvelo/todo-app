@@ -6,6 +6,5 @@ export interface NoteDTO {
     tags: NoteTag;
     createdAt: Date;
     updatedAt: Date;
-    _id: string;
-    _v: number;
+    id: string;
 }

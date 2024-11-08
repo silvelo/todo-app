@@ -15,11 +15,11 @@ EXPOSE $PORT
 FROM base AS backend-base
 
 # Install dependencies
-COPY ./backend/package*.json ./
+COPY ./package*.json ./
 RUN npm install --legacy-peer-deps
 
 # Copy backend code into the container
-COPY ./backend .
+COPY . .
 
 CMD [ "npm", "run", "start:dev" ]
 
@@ -61,3 +61,5 @@ COPY --from=backend-build /usr/local/app/dist ./dist
 COPY --from=backend-build /usr/local/app/node_modules ./node_modules
 
 CMD ["node", "dist/main.js"]
+
+
