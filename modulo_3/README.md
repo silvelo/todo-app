@@ -215,12 +215,83 @@ docker network create todo-backend
 4. Comprobamos la base de datos que existe ``notes` y su contenido
    ![Infraestructura final](/img/database_add.png)
 
-# Ejercicio: Persistencia de Datos con Volúmenes
+# Ejercicio 1: Persistencia de Datos con Volúmenes
 
 Partiendo del ejercicio de redes donde se conectan las aplicaciones `todo-backend` y `todo-client`, realiza lo siguiente:
 
-1. Crea un volumen nombrado para almacenar la base de datos de MongoDB.
+1. Crea un volumen nombrado para almacenar la base de datos de MongoDB y añade dicho volume al contenedor.
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+docker volume create mongo_db
+docker run -it -d -p 27017:27017 --network todo-backend -v mongo_db:/data/db --name mongo --hostname mongo_host mongo
+docker inspect mongo
+```
+
+```bash
+"Mounts": [
+            {
+                "Type": "volume",
+                "Name": "mongo_db",
+                "Source": "/var/lib/docker/volumes/mongo_db/_data",
+                "Destination": "/data/db",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            },
+```
+
+</details>
+
 2. Inserta algunas entradas de ejemplo en la base de datos de MongoDB a través del backend.
-3. Detén y elimina el contenedor de MongoDB, pero mantén el volumen persistente.
+   ![Database](/img/database_add.png)
+3. Elimina el contenedor de MongoDB.
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+docker rm -f mongo
+```
+
+</details>
 4. Crea un nuevo contenedor de MongoDB usando el mismo volumen nombrado.
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+docker run -it -d -p 27017:27017 --network todo-backend -v mongo_db:/data/db --name mongo --hostname mongo_host mongo
+```
+
+</details>
 5. Verifica que los datos insertados anteriormente siguen estando presentes en la base de datos.
+
+# Ejercicio 2: Persistencia de Datos con Volúmenes
+
+Partiendo del ejercicio anterior:
+
+1. Haz una copia del volumen en un directorio local.
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+docker cp mongo:/data/db ./mongo_db
+```
+
+</details>
+
+2. Creamos una nueva máquina de mongo con un volume de tipo bind.
+
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+# Tanto el nombre como el puerto(27017) estarán siendo usados por el primer mongo.
+docker run -it -d -p 27018:27017 -v .\mongo_db\:/data/db --name mongo_2  mongo
+```
+
+</details>
+
+3. Verificamos que ambas base de datos tengas los mismo datos.
+   ![Mongo Réplica](/img/duplicate_mongo.png)
