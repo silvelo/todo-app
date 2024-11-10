@@ -295,3 +295,62 @@ docker run -it -d -p 27018:27017 -v .\mongo_db\:/data/db --name mongo_2  mongo
 
 3. Verificamos que ambas base de datos tengas los mismo datos.
    ![Mongo Réplica](/img/duplicate_mongo.png)
+
+# Ejercicio 3: Persistencia de Datos con Volúmenes
+
+1. Crea una nueva instancia de mongo con un volume anónimo e inspecciona la información de los volumenes.
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+# Tanto el nombre como el puerto(27017) estarán siendo usados por el primer mongo.
+docker run -it -d -p 27019:27017 --name mongo_3  mongo
+docker inspect mongo_3
+```
+
+```bash
+{
+    "Type": "volume",
+    "Name": "676ad7f60cc74e3c341b98d2fe8709a9d58b53910617ee43cb3c633c87ce8c08",
+    "Source": "/var/lib/docker/volumes/676ad7f60cc74e3c341b98d2fe8709a9d58b53910617ee43cb3c633c87ce8c08/_data",
+    "Destination": "/data/db",
+    "Driver": "local",
+    "Mode": "",
+    "RW": true,
+    "Propagation": ""
+}
+```
+
+</details>
+
+2. Inserta algunas entradas de ejemplo en la base de datos de MongoDB.
+
+3. Detén y borra el contenedor.
+
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+docker stop mongo_3
+docker rm mongo_3
+```
+
+</details>
+
+4. Recupera los datos del volume e intenta montarlos en otro contenedor.
+<details>
+<summary>Ver Comandos</summary>
+
+```bash
+cp -R /var/lib/docker/volumes/676ad7f60cc74e3c341b98d2fe8709a9d58b53910617ee43cb3c633c87ce8c08 mongo_backup
+
+# ó (Windows)
+
+\\wsl$\docker-desktop-data\data\docker\volumes\676ad7f60cc74e3c341b98d2fe8709a9d58b53910617ee43cb3c633c87ce8c08
+```
+
+```bash
+docker run -it -d -p 27020:27017 -v ./mongo_backup:/data/db mongo
+```
+
+</details>
