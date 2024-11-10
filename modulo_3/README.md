@@ -215,12 +215,36 @@ docker network create todo-backend
 4. Comprobamos la base de datos que existe ``notes` y su contenido
    ![Infraestructura final](/img/database_add.png)
 
-# Ejercicio: Persistencia de Datos con Volúmenes
+
+# Ejercicio 1: Persistencia de Datos con Volúmenes
 
 Partiendo del ejercicio de redes donde se conectan las aplicaciones `todo-backend` y `todo-client`, realiza lo siguiente:
 
-1. Crea un volumen nombrado para almacenar la base de datos de MongoDB.
+1. Crea un volumen nombrado para almacenar la base de datos de MongoDB y añade dicho volume al contenedor.
+
 2. Inserta algunas entradas de ejemplo en la base de datos de MongoDB a través del backend.
-3. Detén y elimina el contenedor de MongoDB, pero mantén el volumen persistente.
+3. Elimina el contenedor de MongoDB.
+
 4. Crea un nuevo contenedor de MongoDB usando el mismo volumen nombrado.
+
 5. Verifica que los datos insertados anteriormente siguen estando presentes en la base de datos.
+
+# Ejercicio 2: Persistencia de Datos con Volúmenes
+
+Partiendo del ejercicio anterior:
+
+1. Haz una copia del volumen en un directorio local.
+
+2. Creamos una nueva máquina de mongo con un volume de tipo bind.
+
+3. Verificamos que ambas base de datos tengas los mismo datos.
+
+# Ejercicio 3: Persistencia de Datos con Volúmenes
+
+1. Crea una nueva instancia de mongo con un volume anónimo e inspecciona la información de los volumenes.
+
+2. Inserta algunas entradas de ejemplo en la base de datos de MongoDB.
+
+3. Detén y borra el contenedor.
+
+4. Recupera los datos del volume e intenta montarlos en otro contenedor.
