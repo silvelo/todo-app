@@ -1,0 +1,18 @@
+FROM node:20 as base
+WORKDIR /usr/local/app
+COPY package*.json .
+
+RUN npm install --legacy-peer-deps
+COPY . .
+RUN npm run build
+
+FROM node:20
+ENV USE_MEMORY_DB=true \
+DATABASE_URI=mongodb://localhost:27017/notes \
+PORT=3000
+EXPOSE 3000
+
+COPY --from=base /usr/local/app/dist ./dist
+COPY --from=base /usr/local/app/node_modules ./node_modules
+
+CMD ["node", "dist/main.js"]
