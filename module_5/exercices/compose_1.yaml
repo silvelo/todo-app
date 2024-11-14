@@ -1,3 +1,4 @@
+# docker compose  -p todo-1 -f .\compose_1.yaml up -d
 version: "3"
 
 services:
@@ -5,7 +6,7 @@ services:
     depends_on:
       - backend
     image: silvelo/todo-client
-    container_name: todo-client
+    container_name: ${COMPOSE_PROJECT_NAME}_client
     hostname: todo-client
     networks:
       - client-network
@@ -19,6 +20,7 @@ services:
     networks:
       - client-network
     hostname: todo-backend
+    container_name: ${COMPOSE_PROJECT_NAME}_backend
     #environment:
     #- DATABASE_URI=mongodb://mongo:27017/todo
     #- USE_MEMORY_DB=true
