@@ -1,0 +1,45 @@
+version: "3.8" # Versión de Docker Compose
+
+services:
+  database: # Definición del servicio "database"
+    image: mongo:latest # Imagen de Docker para MongoDB
+    container_name: mongo # Nombre del contenedor
+    hostname: mongodb # Nombre del host dentro del contenedor
+    volumes: # Volúmenes para persistencia de datos
+      - mongo-data:/data/db # Monta un volumen para la base de datos
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro # Script de inicialización (opcional)
+    networks: # Redes a las que se conecta el servicio
+      - database-network
+    ports: # Mapea los puertos del contenedor al host
+      - "27017:27017" # Mapea el puerto 27017 del contenedor al host
+    environment: # Variables de entorno para la configuración de MongoDB
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    restart: always # Política de reinicio del contenedor
+
+  mongo-express:
+    depends_on: # Dependencia del servicio "mongo-express"
+      - database
+    image: mongo-express
+    container_name: my-mongo-express-container
+    hostname: mongodb-express
+    restart: always
+    networks: # Redes a las que se conecta el servicio
+      - database-network
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secret
+      ME_CONFIG_MONGODB_URL: mongodb://database:secret@mongodb:27017/
+      #ME_CONFIG_MONGODB_URL: mongodb://mongodb:secret@mongodb:27017/
+      #ME_CONFIG_MONGODB_URL: mongodb://mongo:secret@mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+
+networks: # Esta sección crea la red si no existe
+  database-network:
+    driver: bridge
+
+volumes: # Define el volumen para la persistencia
+  mongo-data:
+    driver: local
